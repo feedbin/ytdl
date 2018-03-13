@@ -1,1 +1,1 @@
-web: env/bin/gunicorn app:app
+web: env/bin/gunicorn --timeout 400 app:app
