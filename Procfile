@@ -1,1 +1,1 @@
-ytdl: source env/bin/activate && python -m flask run
+web: source env/bin/activate && python -m flask run
