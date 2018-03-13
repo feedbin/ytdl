@@ -51,7 +51,7 @@ namespace :app do
   task :export do
     on roles(:app) do
       within current_path do
-        execute :sudo, "/usr/local/rbenv/shims/foreman -p 6000", :export, :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
+        execute :sudo, "/usr/local/rbenv/shims/foreman", :export, "-p 6000", :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
         execute :sudo, :systemctl, "daemon-reload"
         execute :sudo, :systemctl, :enable, "ytdl.target"
       end
