@@ -1,1 +1,1 @@
-web: source env/bin/activate && gunicorn app:app
+web: echo ""; source env/bin/activate; gunicorn app:app
