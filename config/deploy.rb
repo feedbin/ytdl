@@ -7,6 +7,8 @@ set :repo_url, "git@github.com:feedbin/#{fetch(:application)}.git"
 set :deploy_to, "/srv/apps/#{fetch(:application)}"
 set :log_level, :warn
 
+append :linked_dirs, "env"
+
 namespace :app do
 
   desc "Start processes"
@@ -36,18 +38,28 @@ namespace :app do
     end
   end
 
+  desc "Bootrap app"
+  task :bootstrap do
+    on roles(:app) do
+      within release_path do
+        execute :script, :bootstrap
+      end
+    end
+  end
+
   desc "Export systemd"
   task :export do
     on roles(:app) do
       within current_path do
         execute :sudo, "/usr/local/rbenv/shims/foreman", :export, :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:application)}/current"
         execute :sudo, :systemctl, "daemon-reload"
-        execute :sudo, :systemctl, :enable, "app.target"
+        execute :sudo, :systemctl, :enable, "ytdl.target"
       end
     end
   end
 
 end
 
+after "deploy:updated", "app:bootstrap"
 after "deploy:published", "app:export"
 after "app:export", "app:restart"
