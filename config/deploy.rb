@@ -9,7 +9,7 @@ set :log_level, :warn
 
 append :linked_dirs, "env"
 
-namespace :app do
+namespace :ytdl do
 
   desc "Start processes"
   task :start do
@@ -60,6 +60,6 @@ namespace :app do
 
 end
 
-after "deploy:updated", "app:bootstrap"
-after "deploy:published", "app:export"
-after "app:export", "app:restart"
+after "deploy:updated", "ytdl:bootstrap"
+after "deploy:published", "ytdl:export"
+after "ytdl:export", "ytdl:restart"
