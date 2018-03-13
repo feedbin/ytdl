@@ -9,7 +9,7 @@ set :log_level, :warn
 
 append :linked_dirs, "env"
 
-namespace :ytdl do
+namespace :app do
 
   desc "Start processes"
   task :start do
@@ -38,20 +38,12 @@ namespace :ytdl do
     end
   end
 
-  desc "Bootstrap app"
-  task :bootstrap do
-    on roles(:app) do
-      within release_path do
-        execute "script/bootstrap.sh"
-      end
-    end
-  end
-
   desc "Export systemd"
   task :export do
     on roles(:app) do
       within current_path do
-        execute :sudo, "/usr/local/rbenv/shims/foreman", :export, "-p 6000", :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
+        execute "script/bootstrap.sh"
+        execute :sudo, "/usr/local/rbenv/shims/foreman", :export, "--port 6000", "--app #{fetch(:application)}", :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
         execute :sudo, :systemctl, "daemon-reload"
         execute :sudo, :systemctl, :enable, "ytdl.target"
       end
@@ -60,6 +52,5 @@ namespace :ytdl do
 
 end
 
-after "deploy:updated", "ytdl:bootstrap"
-after "deploy:published", "ytdl:export"
-after "ytdl:export", "ytdl:restart"
+after "deploy:published", "app:export"
+after "app:export", "app:restart"
