@@ -1,1 +1,1 @@
-web: source env/bin/activate && python -m flask run
+web: source env/bin/activate && export FLASK_APP=app.py python -m flask run
