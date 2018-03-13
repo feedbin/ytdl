@@ -11,12 +11,11 @@ if [ -z "$VENV_NAME" ]; then
     VENV_NAME="env"
 fi
 
-if [ ! -d "$VENV_NAME" ]; then
-    if [ -z "$VENV_PYTHON" ]; then
-        VENV_PYTHON=`which python`
-    fi
-    virtualenv --python=$VENV_PYTHON $VENV_NAME
+if [ -z "$VENV_PYTHON" ]; then
+    VENV_PYTHON=`which python`
 fi
+virtualenv --python=$VENV_PYTHON $VENV_NAME
+
 source "$VENV_NAME/bin/activate"
 
 pip install -U -r requirements.txt
