@@ -17,7 +17,7 @@ if [ ! -d "$VENV_NAME" ]; then
     fi
     virtualenv --python=$VENV_PYTHON $VENV_NAME
 fi
-. "$VENV_NAME/bin/activate"
+source "$VENV_NAME/bin/activate"
 
 pip install -U -r requirements.txt
 
