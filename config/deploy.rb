@@ -38,11 +38,19 @@ namespace :app do
     end
   end
 
+  desc "Bootstrap app"
+  task :bootstrap do
+    on roles(:app) do
+      within release_path do
+        execute "script/bootstrap.sh"
+      end
+    end
+  end
+
   desc "Export systemd"
   task :export do
     on roles(:app) do
       within current_path do
-        execute "script/bootstrap.sh"
         execute :sudo, "/usr/local/rbenv/shims/foreman", :export, "--port 6000", "--app #{fetch(:application)}", :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
         execute :sudo, :systemctl, "daemon-reload"
         execute :sudo, :systemctl, :enable, "ytdl.target"
@@ -52,5 +60,6 @@ namespace :app do
 
 end
 
+after "deploy:updated", "app:bootstrap"
 after "deploy:published", "app:export"
 after "app:export", "app:restart"
