@@ -38,12 +38,10 @@ namespace :app do
     end
   end
 
-  desc "Bootrap app"
+  desc "Bootstrap app"
   task :bootstrap do
     on roles(:app) do
-      within release_path do
-        execute "script/bootstrap.sh"
-      end
+      execute "cd #{release_path} && script/bootstrap.sh"
     end
   end
 
