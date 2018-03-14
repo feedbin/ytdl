@@ -15,7 +15,7 @@ namespace :app do
   task :start do
     on roles(:app) do |host|
       within release_path do
-        execute :sudo, :systemctl, :start, "ytdl.target"
+        execute :sudo, :systemctl, :start, "#{fetch(:application)}.target"
       end
     end
   end
@@ -24,7 +24,7 @@ namespace :app do
   task :stop do
     on roles(:app) do |host|
       within release_path do
-        execute :sudo, :systemctl, :stop, "ytdl.target"
+        execute :sudo, :systemctl, :stop, "#{fetch(:application)}.target"
       end
     end
   end
@@ -33,7 +33,7 @@ namespace :app do
   task :restart do
     on roles(:app) do |host|
       within release_path do
-        execute :sudo, :systemctl, :restart, "ytdl.target"
+        execute :sudo, :systemctl, :restart, "#{fetch(:application)}.target"
       end
     end
   end
@@ -42,7 +42,7 @@ namespace :app do
   task :bootstrap do
     on roles(:app) do
       within release_path do
-        # execute "script/bootstrap.sh"
+        execute "script/bootstrap.sh"
       end
     end
   end
@@ -53,7 +53,7 @@ namespace :app do
       within current_path do
         execute :sudo, "/usr/local/rbenv/shims/foreman", :export, "--port 6000", "--app #{fetch(:application)}", :systemd, "/etc/systemd/system", "--user app", "--root #{fetch(:deploy_to)}/current"
         execute :sudo, :systemctl, "daemon-reload"
-        execute :sudo, :systemctl, :enable, "ytdl.target"
+        execute :sudo, :systemctl, :enable, "#{fetch(:application)}.target"
       end
     end
   end
